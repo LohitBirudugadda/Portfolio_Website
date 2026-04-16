@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lohit Birudugadda | System Interface</title>
+  <title>Lohit Birudugadda</title>
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -12,14 +12,16 @@
       --bg: #070a0f;
       --bg2: #0b0f17;
       --card: #0f1520;
-      --border: rgba(0,255,180,0.15);
+      --border: rgba(var(--green-rgb), 0.15);
       --green: #00ffb4;
+      --green-rgb: 0, 255, 180;
       --cyan: #00e5ff;
       --orange: #ff6b2b;
       --yellow: #ffe600;
       --text: #d4f5e9;
       --muted: #5a7a70;
-      --grid: rgba(0,255,180,0.04);
+      --grid: rgba(var(--green-rgb), 0.04);
+      transition: --green 0.5s, --cyan 0.5s, --border 0.5s;
     }
 
     html { scroll-behavior: smooth; }
@@ -29,65 +31,8 @@
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
-      transition: filter 0.1s ease;
     }
 
-    /* --- Hacker Mode Styles --- */
-    body.hacker-mode {
-      filter: invert(1) hue-rotate(180deg) contrast(1.2);
-    }
-    
-    /* Violent Glitch Animation */
-    body.glitch-active {
-      animation: glitch-anim 0.25s infinite;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    @keyframes glitch-anim {
-      0% { transform: translate(0); clip-path: inset(0 0 0 0); }
-      20% { transform: translate(-5px, 5px); clip-path: inset(10% 0 30% 0); }
-      40% { transform: translate(5px, -5px); clip-path: inset(40% 0 10% 0); }
-      60% { transform: translate(-10px, 0px); filter: hue-rotate(90deg); }
-      80% { transform: translate(10px, 5px); clip-path: inset(20% 0 50% 0); }
-      100% { transform: translate(0); }
-    }
-
-    /* Floating Alert */
-    #hacker-alert {
-      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      background: var(--green); color: black;
-      padding: 1rem 2rem; font-family: 'Share Tech Mono', monospace;
-      font-weight: bold; z-index: 1000; display: none;
-      box-shadow: 0 0 50px var(--green);
-    }
-
-    /* Interactive Nav Button */
-    .nav-status {
-      display: flex; align-items: center; gap: 10px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--green);
-      cursor: pointer; padding: 5px 10px;
-      border: 1px solid transparent; transition: all 0.2s;
-    }
-    .nav-status:hover {
-      border-color: var(--green); background: rgba(0,255,180,0.1);
-    }
-    .nav-status::after {
-      content: ' →'; opacity: 0; transform: translateX(-5px);
-      transition: all 0.2s;
-    }
-    .nav-status:hover::after { opacity: 1; transform: translateX(0); }
-
-    .nav-status::before {
-      content: ''; width: 7px; height: 7px;
-      border-radius: 50%; background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: blink 1.4s ease-in-out infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-    /* Background Elements */
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 0;
@@ -98,93 +43,502 @@
       pointer-events: none;
     }
 
-    #circuit-canvas { position: fixed; inset: 0; z-index: 0; opacity: 0.35; pointer-events: none; }
-    #osc-canvas { position: absolute; bottom: 0; left: 0; right: 0; height: 120px; opacity: 0.7; }
+    #circuit-canvas {
+      position: fixed; inset: 0; z-index: 0;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    #osc-canvas {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      opacity: 0.7;
+    }
 
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 3rem; height: 64px;
-      background: rgba(7,10,15,0.92); backdrop-filter: blur(16px);
+      background: rgba(7,10,15,0.92);
+      backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
     .nav-logo {
-      font-family: 'Orbitron', monospace; font-size: 15px; font-weight: 900;
-      color: var(--green); letter-spacing: 0.12em; text-decoration: none;
-      text-shadow: 0 0 20px rgba(0,255,180,0.5);
+      font-family: 'Orbitron', monospace;
+      font-size: 15px; font-weight: 900;
+      color: var(--green);
+      letter-spacing: 0.12em;
+      text-decoration: none;
+      text-shadow: 0 0 20px rgba(var(--green-rgb), 0.5);
+      transition: color 0.3s, text-shadow 0.3s;
     }
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
     .nav-links a {
-      font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--muted);
-      text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px; color: var(--muted);
+      text-decoration: none; letter-spacing: 0.08em;
+      text-transform: uppercase; transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--green); }
-
-    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding: 80px 3rem 0; overflow: hidden; }
-    .hero-inner { position: relative; z-index: 2; max-width: 800px; }
-    .chip-label {
-      display: inline-flex; align-items: center; gap: 10px; font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; letter-spacing: 0.15em; color: var(--green); text-transform: uppercase;
-      margin-bottom: 1.5rem; padding: 6px 14px; border: 1px solid rgba(0,255,180,0.3);
-      border-radius: 2px; background: rgba(0,255,180,0.05);
+    .nav-status {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--green);
+      cursor: pointer;
+      user-select: none;
+      transition: color 0.3s;
     }
-    .hero h1 { font-family: 'Orbitron', monospace; font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 900; line-height: 0.95; margin-bottom: 1rem; }
-    .hero h1 .line2 { display: block; background: linear-gradient(90deg, var(--green), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(0,255,180,0.4)); }
-    .hero-role { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--cyan); margin-bottom: 1.5rem; }
-    .hero-desc { font-size: 16px; color: var(--muted); max-width: 520px; line-height: 1.8; margin-bottom: 2.5rem; }
-    
-    .btn { font-family: 'Share Tech Mono', monospace; font-size: 12px; padding: 13px 28px; text-decoration: none; display: inline-block; }
-    .btn-primary { background: var(--green); color: #070a0f; font-weight: 700; box-shadow: 0 0 30px rgba(0,255,180,0.3); }
-    .btn-outline { border: 1px solid rgba(0,229,255,0.4); color: var(--cyan); }
+    .nav-status:hover {
+      text-shadow: 0 0 10px var(--green);
+    }
+    .nav-status::before {
+      content: ''; width: 7px; height: 7px;
+      border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: blink 1.4s ease-in-out infinite;
+      transition: background 0.3s, box-shadow 0.3s;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-    .signal-band { background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1rem 3rem; overflow: hidden; position: relative; z-index: 2; }
-    .signal-ticker { display: flex; gap: 4rem; animation: ticker 35s linear infinite; white-space: nowrap; font-family: 'Share Tech Mono', monospace; font-size: 11px; }
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 80px 3rem 0;
+      overflow: hidden;
+    }
+    .hero-inner { position: relative; z-index: 2; max-width: 800px; }
+
+    .chip-label {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: 0.15em;
+      color: var(--green); text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      padding: 6px 14px;
+      border: 1px solid rgba(var(--green-rgb), 0.3);
+      border-radius: 2px;
+      background: rgba(var(--green-rgb), 0.05);
+      transition: all 0.3s;
+    }
+    .chip-label::before { content: '['; color: var(--muted); }
+    .chip-label::after  { content: ']'; color: var(--muted); }
+
+    .hero h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      margin-bottom: 1rem;
+    }
+    .hero h1 .line1 { color: var(--text); display: block; }
+    .hero h1 .line2 {
+      display: block;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 30px rgba(var(--green-rgb), 0.4));
+      transition: background 0.3s;
+    }
+
+    .hero-role {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 14px; color: var(--cyan);
+      letter-spacing: 0.1em; margin-bottom: 1.5rem;
+      transition: color 0.3s;
+    }
+    .hero-role span { color: var(--muted); }
+
+    .hero-desc {
+      font-size: 16px; color: var(--muted);
+      max-width: 520px; line-height: 1.8;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 13px 28px; border-radius: 2px;
+      text-decoration: none; transition: all 0.2s;
+      cursor: pointer; border: none; display: inline-block;
+    }
+    .btn-primary {
+      background: var(--green); color: #070a0f;
+      font-weight: 700;
+      box-shadow: 0 0 30px rgba(var(--green-rgb), 0.3);
+    }
+    .btn-primary:hover { box-shadow: 0 0 50px rgba(var(--green-rgb), 0.6); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(0,229,255,0.4);
+      color: var(--cyan);
+    }
+    .btn-outline:hover { background: rgba(0,229,255,0.07); border-color: var(--cyan); transform: translateY(-2px); }
+
+    .signal-band {
+      position: relative; z-index: 2;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 3rem;
+      overflow: hidden;
+    }
+    .signal-ticker {
+      display: flex; gap: 4rem; align-items: center;
+      animation: ticker 35s linear infinite;
+      white-space: nowrap;
+    }
     @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .ticker-item {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: 0.1em;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .ticker-item .val { color: var(--green); transition: color 0.3s; }
+    .ticker-item .key { color: var(--muted); text-transform: uppercase; }
+    .ticker-sep { color: rgba(var(--green-rgb), 0.2); }
 
     section { padding: 6rem 3rem; position: relative; z-index: 2; }
     .container { max-width: 1000px; margin: 0 auto; }
-    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 3rem; }
+
+    /* INTERACTIVE SCROLL REVEAL CLASSES */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.2, 1, 0.2, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .sec-header { margin-bottom: 3rem; }
+    .sec-num {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--green);
+      letter-spacing: 0.15em; margin-bottom: 0.4rem;
+      transition: color 0.3s;
+    }
+    .sec-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 900; letter-spacing: 0.02em;
+      color: var(--text);
+    }
+    .sec-title span {
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      transition: background 0.3s;
+    }
+
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: var(--border);
+      border: 1px solid var(--border); margin-bottom: 3rem;
+    }
     .stat { background: var(--card); padding: 1.5rem; text-align: center; }
-    .stat .n { font-family: 'Orbitron', monospace; font-size: 2.2rem; color: var(--green); }
-    .skill-block { border: 1px solid var(--border); background: var(--card); padding: 1.5rem; margin-bottom: 1rem; }
-    .proj-card { border: 1px solid var(--border); background: var(--card); padding: 1.75rem; transition: 0.3s; }
-    .proj-card:hover { border-color: var(--green); transform: translateY(-5px); }
-    
-    footer { padding: 1.5rem 3rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--muted); }
+    .stat .n {
+      font-family: 'Orbitron', monospace;
+      font-size: 2.2rem; font-weight: 900;
+      color: var(--green);
+      text-shadow: 0 0 20px rgba(var(--green-rgb), 0.4);
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+    .stat .l {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--muted);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    #about { background: var(--bg2); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+    .about-text p { font-size: 15px; color: var(--muted); line-height: 1.9; margin-bottom: 1rem; font-weight: 300; }
+    .about-text p strong { color: var(--text); font-weight: 500; }
+
+    .edu-card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 1.5rem;
+      position: relative; overflow: hidden;
+      transition: border-color 0.3s;
+    }
+    .edu-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      transition: background 0.3s;
+    }
+    .edu-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 14px; font-weight: 700;
+      color: var(--text); margin-bottom: 4px;
+    }
+    .edu-card .deg { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+    .edu-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+    .badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; padding: 4px 10px;
+      border: 1px solid rgba(var(--green-rgb), 0.3);
+      background: rgba(var(--green-rgb), 0.07);
+      color: var(--green); border-radius: 2px;
+      letter-spacing: 0.05em;
+      transition: all 0.3s;
+    }
+    .badge.cyan { border-color: rgba(0,229,255,0.3); background: rgba(0,229,255,0.07); color: var(--cyan); }
+    .courses-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--muted);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .course-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ctag {
+      font-size: 11px; padding: 3px 8px;
+      border: 1px solid rgba(90,122,112,0.3);
+      background: rgba(90,122,112,0.08);
+      color: var(--muted); border-radius: 2px;
+      cursor: default; transition: all 0.2s;
+    }
+    .ctag:hover {
+      border-color: var(--green); color: var(--green);
+    }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .skill-block {
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 1.25rem 1.5rem;
+      position: relative; overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .skill-block:hover { border-color: rgba(var(--green-rgb), 0.4); transform: translateY(-2px); }
+    .skill-block::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      height: 2px; width: 40%;
+      background: linear-gradient(90deg, var(--green), transparent);
+    }
+    .skill-block h4 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+    .stags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .stag {
+      font-size: 12px; padding: 4px 10px;
+      border: 1px solid rgba(var(--green-rgb), 0.2);
+      background: rgba(var(--green-rgb), 0.05);
+      color: var(--text); border-radius: 2px;
+      transition: all 0.15s; cursor: default;
+    }
+    .stag:hover { border-color: var(--green); color: var(--green); background: rgba(var(--green-rgb), 0.1); transform: scale(1.05); }
+    .stag.c { border-color: rgba(0,229,255,0.2); background: rgba(0,229,255,0.05); }
+    .stag.c:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.1); }
+    .stag.o { border-color: rgba(255,107,43,0.2); background: rgba(255,107,43,0.05); }
+    .stag.o:hover { border-color: var(--orange); color: var(--orange); background: rgba(255,107,43,0.1); }
+
+    #experience { background: var(--bg2); }
+    .exp-list { display: flex; flex-direction: column; gap: 20px; }
+    .exp-card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 1.75rem 2rem;
+      position: relative; overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .exp-card:hover { border-color: rgba(var(--green-rgb), 0.35); transform: translateX(8px); }
+    .exp-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, var(--green), var(--cyan));
+      transition: background 0.3s;
+    }
+    .exp-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 0.75rem;
+      flex-wrap: wrap; gap: 8px;
+    }
+    .exp-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 13px; font-weight: 700; color: var(--text);
+    }
+    .exp-date {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--green); letter-spacing: 0.08em;
+      transition: color 0.3s;
+    }
+    .exp-org {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--cyan);
+      letter-spacing: 0.08em; margin-bottom: 1rem;
+      transition: color 0.3s;
+    }
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+    .exp-bullets li {
+      font-size: 13.5px; color: var(--muted);
+      padding-left: 1.2rem; position: relative;
+      line-height: 1.6; font-weight: 300;
+    }
+    .exp-bullets li::before {
+      content: '▸'; position: absolute; left: 0;
+      color: var(--green); font-size: 10px; top: 3px;
+      transition: color 0.3s;
+    }
+
+    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .proj-card {
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 1.75rem;
+      position: relative; overflow: hidden;
+      transition: all 0.25s;
+    }
+    .proj-card:hover {
+      border-color: rgba(var(--green-rgb), 0.4);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(var(--green-rgb), 0.08);
+    }
+    .proj-card::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--orange), var(--yellow));
+    }
+    .proj-icon {
+      width: 48px; height: 48px;
+      border: 1px solid rgba(255,107,43,0.3);
+      background: rgba(255,107,43,0.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; margin-bottom: 1.25rem; border-radius: 2px;
+      transition: transform 0.3s;
+    }
+    .proj-card:hover .proj-icon { transform: rotate(-10deg) scale(1.1); }
+    .proj-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 0.5rem;
+    }
+    .proj-date {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; color: var(--muted);
+      letter-spacing: 0.08em; margin-bottom: 0.75rem;
+    }
+    .proj-card p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 1.25rem; font-weight: 300; }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .proj-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px; padding: 3px 8px;
+      border: 1px solid rgba(255,107,43,0.25);
+      background: rgba(255,107,43,0.06);
+      color: var(--orange); border-radius: 2px; letter-spacing: 0.05em;
+    }
+
+    #contact { background: var(--bg2); }
+    .contact-box {
+      border: 1px solid var(--border);
+      background: var(--card);
+      padding: 3rem; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .contact-box::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--cyan), var(--orange));
+      transition: background 0.3s;
+    }
+    .contact-box h2 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 900; margin-bottom: 1rem;
+    }
+    .contact-box p {
+      font-size: 15px; color: var(--muted);
+      max-width: 440px; margin: 0 auto 2.5rem; line-height: 1.8; font-weight: 300;
+    }
+    .contact-links { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .clink {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 11px 20px; border-radius: 2px;
+      text-decoration: none; transition: all 0.2s;
+      border: 1px solid var(--border);
+      color: var(--text); background: rgba(255,255,255,0.02);
+      cursor: pointer;
+    }
+    .clink:hover { border-color: var(--green); color: var(--green); background: rgba(var(--green-rgb), 0.05); transform: translateY(-2px); }
+    .clink svg { width: 14px; height: 14px; }
+
+    /* TOAST NOTIFICATION */
+    .toast-container {
+      position: fixed; bottom: 24px; right: 24px; z-index: 999;
+      display: flex; flex-direction: column; gap: 10px;
+      pointer-events: none;
+    }
+    .toast {
+      background: var(--card); border: 1px solid var(--green);
+      color: var(--green); padding: 12px 20px; border-radius: 2px;
+      font-family: 'Share Tech Mono', monospace; font-size: 11px;
+      letter-spacing: 0.05em; text-transform: uppercase;
+      box-shadow: 0 0 15px rgba(var(--green-rgb), 0.2);
+      opacity: 0; transform: translateX(50px);
+      transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
+    }
+    .toast.show { opacity: 1; transform: translateX(0); }
+
+    footer {
+      padding: 1.5rem 3rem;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--muted); letter-spacing: 0.08em;
+      position: relative; z-index: 2;
+    }
 
     @media (max-width: 700px) {
-      .stats-row { grid-template-columns: 1fr 1fr; }
       nav { padding: 0 1rem; }
-      .nav-links { display: none; }
+      .nav-links, .nav-status { display: none; }
+      section { padding: 4rem 1.25rem; }
+      .hero { padding: 80px 1.25rem 0; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .about-grid, .skills-grid, .projects-grid { grid-template-columns: 1fr; }
+      .signal-band { padding: 1rem 1.25rem; }
+      footer { flex-direction: column; gap: 8px; }
+      .contact-box { padding: 2rem 1.25rem; }
+      .toast-container { right: 10px; bottom: 10px; left: 10px; align-items: center; }
     }
   </style>
 </head>
 <body>
 
-<div id="hacker-alert">OVERRIDING CORE SYSTEM...</div>
 <canvas id="circuit-canvas"></canvas>
 
 <nav>
   <a href="#" class="nav-logo">LB_SYS</a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <div class="nav-status" id="system-trigger">SYSTEM ONLINE</div>
+  <div class="nav-status" id="sys-status" title="Toggle Hacker Mode">SYSTEM ONLINE</div>
 </nav>
 
-<section class="hero">
+<section class="hero reveal active">
   <canvas id="osc-canvas"></canvas>
   <div class="hero-inner">
-    <div class="chip-label">ECE · Oregon State University</div>
+    <div class="chip-label">ECE · Oregon State University · Corvallis OR</div>
     <h1>
       <span class="line1">LOHIT</span>
       <span class="line2">BIRUDUGADDA</span>
     </h1>
-    <p class="hero-role">// Embedded Systems · Hardware Research</p>
-    <p class="hero-desc">ECE student building at the boundary of hardware and high-performance computation.</p>
+    <p class="hero-role">// <span>Embedded Systems</span> · <span>Signal Processing</span> · <span>Hardware Research</span></p>
+    <p class="hero-desc">
+      ECE student building at the boundary of hardware and high-performance computation — from spintronic signal simulations to BLE-driven embedded systems.
+    </p>
     <div class="hero-btns">
       <a href="#contact" class="btn btn-primary">Initialize contact</a>
       <a href="#projects" class="btn btn-outline">View projects</a>
@@ -192,29 +546,231 @@
   </div>
 </section>
 
-<div class="signal-band">
+<div class="signal-band reveal">
   <div class="signal-ticker">
-    <span>GPA: 3.92</span> · <span>MCU: ESP32</span> · <span>PROTOCOL: BLE / SPI</span> · <span>LANG: C++ / SYSTEMVERILOG</span> · <span>RESEARCH: SPINTRONICS</span>
-    <span>GPA: 3.92</span> · <span>MCU: ESP32</span> · <span>PROTOCOL: BLE / SPI</span> · <span>LANG: C++ / SYSTEMVERILOG</span> · <span>RESEARCH: SPINTRONICS</span>
+    <span class="ticker-item"><span class="key">GPA</span>&nbsp;<span class="val">3.92</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Protocol</span>&nbsp;<span class="val">BLE / SPI / UART</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">MCU</span>&nbsp;<span class="val">ESP32</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Sim</span>&nbsp;<span class="val">MuMax Plus · GPU</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Material</span>&nbsp;<span class="val">YIG · Graphene · TiO₂</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Students</span>&nbsp;<span class="val">150+</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Lang</span>&nbsp;<span class="val">C · C++ · Python · SystemVerilog</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">GPA</span>&nbsp;<span class="val">3.92</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Protocol</span>&nbsp;<span class="val">BLE / SPI / UART</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">MCU</span>&nbsp;<span class="val">ESP32</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Sim</span>&nbsp;<span class="val">MuMax Plus · GPU</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Material</span>&nbsp;<span class="val">YIG · Graphene · TiO₂</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Students</span>&nbsp;<span class="val">150+</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
+    <span class="ticker-item"><span class="key">Lang</span>&nbsp;<span class="val">C · C++ · Python · SystemVerilog</span></span>
+    <span class="ticker-sep">&nbsp;·&nbsp;</span>
   </div>
 </div>
 
 <section id="about">
-  <div class="container">
-    <div class="stats-row">
-      <div class="stat"><div class="n">3.92</div><div class="l">GPA</div></div>
+  <div class="container reveal">
+    <div class="sec-header">
+      <div class="sec-num">// 01</div>
+      <h2 class="sec-title">About <span>Me</span></h2>
+    </div>
+    <div class="stats-row reveal">
+      <div class="stat"><div class="n">3.92</div><div class="l">GPA · Honors</div></div>
       <div class="stat"><div class="n">3</div><div class="l">Research Roles</div></div>
       <div class="stat"><div class="n">150+</div><div class="l">Students Mentored</div></div>
-      <div class="stat"><div class="n">2028</div><div class="l">Graduation</div></div>
+      <div class="stat"><div class="n">2028</div><div class="l">Expected Grad</div></div>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>I'm a sophomore pursuing an <strong>Honors B.S. in Electrical and Computer Engineering</strong> at Oregon State University. My work spans the full stack from transistor-level analog design to GPU-accelerated micromagnetic simulation.</p>
+        <p>I hold three simultaneous research roles: simulating <strong>spin wave propagation in YIG films</strong>, synthesizing <strong>2D materials via laser ablation</strong>, and teaching data structures as an <strong>Undergraduate Learning Assistant</strong>.</p>
+        <p>I'm drawn to problems at the intersection of physics, hardware, and computation — where theory meets a soldering iron.</p>
+      </div>
+      <div class="edu-card">
+        <h3>Oregon State University</h3>
+        <div class="deg">Honors B.S. · Electrical &amp; Computer Engineering · Corvallis, OR</div>
+        <div class="edu-badges">
+          <span class="badge">GPA: 3.92 / 4.00</span>
+          <span class="badge cyan">Expected Jun. 2028</span>
+        </div>
+        <div class="courses-label">Relevant coursework</div>
+        <div class="course-tags">
+          <span class="ctag">Electrical Fundamentals</span>
+          <span class="ctag">Data Structures</span>
+          <span class="ctag">Digital Logic Design</span>
+          <span class="ctag">Electronic Circuit Design</span>
+          <span class="ctag">Electronics II</span>
+          <span class="ctag">Digital Signal Processing</span>
+          <span class="ctag">Analysis of Algorithms</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="container reveal">
+    <div class="sec-header">
+      <div class="sec-num">// 02</div>
+      <h2 class="sec-title">Tech <span>Stack</span></h2>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-block">
+        <h4>Languages</h4>
+        <div class="stags">
+          <span class="stag">C</span><span class="stag">C++</span><span class="stag">Python</span>
+          <span class="stag">SystemVerilog</span><span class="stag">HTML/CSS</span><span class="stag">JavaScript</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h4>Embedded &amp; Hardware</h4>
+        <div class="stags">
+          <span class="stag c">ESP32</span><span class="stag c">FPGA</span><span class="stag c">Arduino</span>
+          <span class="stag c">GPIO</span><span class="stag c">SPI / UART</span><span class="stag c">BLE / Wi-Fi</span>
+          <span class="stag c">KiCad</span><span class="stag c">LTspice</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h4>Test &amp; Measurement</h4>
+        <div class="stags">
+          <span class="stag o">Oscilloscope</span><span class="stag o">Digital Multimeter</span><span class="stag o">Electronic Load</span>
+        </div>
+      </div>
+      <div class="skill-block">
+        <h4>Software &amp; Simulation</h4>
+        <div class="stags">
+          <span class="stag">MuMax Plus</span><span class="stag">GPU Pipelines</span>
+          <span class="stag">Data Structures</span><span class="stag">OOP</span><span class="stag">Real-Time Systems</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience">
+  <div class="container reveal">
+    <div class="sec-header">
+      <div class="sec-num">// 03</div>
+      <h2 class="sec-title">Research &amp; <span>Experience</span></h2>
+    </div>
+    <div class="exp-list reveal">
+
+      <div class="exp-card">
+        <div class="exp-top">
+          <div class="exp-title">Student Researcher — Spintronic Signal Processing</div>
+          <div class="exp-date">Spring 2026 – Present</div>
+        </div>
+        <div class="exp-org">Dr. Albrecht Jander · Oregon State University</div>
+        <ul class="exp-bullets">
+          <li>Applying MuMax Plus for micromagnetic simulations of forward-volume spin waves in YIG films</li>
+          <li>Gaining experience with GPU-accelerated simulation pipelines and high-performance computation</li>
+          <li>Studying theoretical principles of parametric pumping and noncollinear spin wave coupling</li>
+          <li>Collaborating with Dr. Jander to plan simulation studies and refine research objectives</li>
+        </ul>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-top">
+          <div class="exp-title">Undergraduate Learning Assistant — Data Structures</div>
+          <div class="exp-date">Spring 2026 – Present</div>
+        </div>
+        <div class="exp-org">Dr. David Hendrix · Oregon State University</div>
+        <ul class="exp-bullets">
+          <li>Co-designed 10 weekly Python lab modules covering AVL Trees, Hash Maps, and Heaps for 150 students</li>
+          <li>Led two weekly lab sections of 25 students with technical demos on memory management and algorithms</li>
+          <li>Facilitated high-volume office hours, resolving Big O efficiency and recursion bottlenecks</li>
+          <li>Analyzed student performance trends to iteratively reduce common logic errors</li>
+        </ul>
+      </div>
+
+      <div class="exp-card">
+        <div class="exp-top">
+          <div class="exp-title">Student Researcher — 2D Materials Synthesis</div>
+          <div class="exp-date">Winter 2026 – Present</div>
+        </div>
+        <div class="exp-org">Dr. Nirmala Kandadai · Oregon State University</div>
+        <ul class="exp-bullets">
+          <li>Researching direct synthesis of 2D materials via Laser Ablation Synthesis in Solution (LASiS)</li>
+          <li>Studying intercalation doping of graphene with TiO₂ and Galfenol nanoparticles</li>
+          <li>Gaining hands-on lab experience in synthesis methods, experimental design, and data collection</li>
+          <li>Collaborating to plan experiments and optimize synthesis parameters</li>
+        </ul>
+      </div>
+
     </div>
   </div>
 </section>
 
 <section id="projects">
-  <div class="container">
-    <div class="proj-card">
+  <div class="container reveal">
+    <div class="sec-header">
+      <div class="sec-num">// 04</div>
+      <h2 class="sec-title">Build <span>Log</span></h2>
+    </div>
+    <div class="projects-grid reveal">
+
+      <div class="proj-card">
+        <div class="proj-icon">📡</div>
         <h3>Garage Trigger</h3>
-        <p>ESP32-based embedded system automating garage door triggering over Bluetooth Low Energy.</p>
+        <div class="proj-date">Summer 2025 – Present</div>
+        <p>ESP32-based embedded system automating garage door triggering over Bluetooth Low Energy. Real-time event handling and sensor interfacing via BLE and GPIO using ESP-IDF firmware in C/C++.</p>
+        <div class="proj-tags">
+          <span class="proj-tag">ESP32</span><span class="proj-tag">C / C++</span>
+          <span class="proj-tag">BLE</span><span class="proj-tag">GPIO</span>
+          <span class="proj-tag">ESP-IDF</span><span class="proj-tag">Real-Time</span>
+        </div>
+      </div>
+
+      <div class="proj-card">
+        <div class="proj-icon">⚡</div>
+        <h3>Adjustable DC Power Supply</h3>
+        <div class="proj-date">Fall 2025</div>
+        <p>Full-wave bridge rectifier converting AC to regulated DC. Designed a low-pass filter to suppress ripple voltage and a transistor-based voltage regulator with a potentiometer for adjustable output.</p>
+        <div class="proj-tags">
+          <span class="proj-tag">LTSpice</span><span class="proj-tag">Rectifier</span>
+          <span class="proj-tag">Transistors</span><span class="proj-tag">Filter Design</span>
+          <span class="proj-tag">Oscilloscope</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="container reveal">
+    <div class="sec-header">
+      <div class="sec-num">// 05</div>
+      <h2 class="sec-title">Open <span>Channel</span></h2>
+    </div>
+    <div class="contact-box reveal">
+      <h2>Let's build something.</h2>
+      <p>Open to research opportunities, internships, and conversations about embedded systems, hardware design, or signal processing. Transmit below.</p>
+      <div class="contact-links">
+        <a href="#" onclick="copyToClipboard('birudugl@oregonstate.edu', 'Email Address'); return false;" class="clink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>Email
+        </a>
+        <a href="https://linkedin.com/in/lohitbirudugadda" target="_blank" class="clink">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.554v-5.57c0-1.328-.025-3.038-1.849-3.038-1.851 0-2.135 1.445-2.135 2.94v5.668H9.359V9h3.413v1.561h.047c.474-.9 1.633-1.849 3.361-1.849 3.597 0 4.26 2.368 4.26 5.449v6.289zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn
+        </a>
+        <a href="https://github.com/LohitBirudugadda" target="_blank" class="clink">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>GitHub
+        </a>
+        <a href="#" onclick="copyToClipboard('503-858-9685', 'Phone Number'); return false;" class="clink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.62 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.53 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.5A16 16 0 0 0 12 14.5l.87-.87a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>(503) 858-9685
+        </a>
+      </div>
     </div>
   </div>
 </section>
@@ -224,93 +780,195 @@
   <span id="footer-time"></span>
 </footer>
 
+<div class="toast-container" id="toast-container"></div>
+
 <script>
 // CLOCK
 function tick() {
   const t = new Date();
-  document.getElementById('footer-time').textContent = 'SYS_TIME :: ' + t.toTimeString().slice(0,8);
+  document.getElementById('footer-time').textContent =
+    'SYS_TIME :: ' + t.toTimeString().slice(0,8);
 }
 tick(); setInterval(tick, 1000);
 
-// HACKER MODE LOGIC
-const trigger = document.getElementById('system-trigger');
-const alertBox = document.getElementById('hacker-alert');
-let isHacker = false;
+// SCROLL REVEAL OBSERVER
+const observerOptions = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0.15
+};
 
-trigger.addEventListener('click', () => {
-  // Trigger Glitch
-  document.body.classList.add('glitch-active');
-  alertBox.style.display = 'block';
-  trigger.textContent = "ATTEMPTING OVERRIDE...";
-
-  setTimeout(() => {
-    document.body.classList.remove('glitch-active');
-    alertBox.style.display = 'none';
-    
-    // Toggle Hacker Mode
-    isHacker = !isHacker;
-    if(isHacker) {
-        document.body.classList.add('hacker-mode');
-        trigger.textContent = "HACKER MODE ACTIVE";
-        trigger.style.color = "#ff6b2b";
-    } else {
-        document.body.classList.remove('hacker-mode');
-        trigger.textContent = "SYSTEM ONLINE";
-        trigger.style.color = "#00ffb4";
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active');
+      observer.unobserve(entry.target); // Stop observing once revealed
     }
-  }, 1200);
+  });
+}, observerOptions);
+
+document.querySelectorAll('.reveal').forEach(section => {
+  observer.observe(section);
 });
 
-// CIRCUIT CANVAS
+// INTERACTIVE "HACKER" THEME TOGGLE
+const sysStatus = document.getElementById('sys-status');
+let isHacked = false;
+sysStatus.addEventListener('click', () => {
+  isHacked = !isHacked;
+  if (isHacked) {
+    document.documentElement.style.setProperty('--green', '#ff3333');
+    document.documentElement.style.setProperty('--green-rgb', '255, 51, 51');
+    document.documentElement.style.setProperty('--cyan', '#ff9900');
+    sysStatus.textContent = 'SYSTEM BREACHED';
+  } else {
+    document.documentElement.style.setProperty('--green', '#00ffb4');
+    document.documentElement.style.setProperty('--green-rgb', '0, 255, 180');
+    document.documentElement.style.setProperty('--cyan', '#00e5ff');
+    sysStatus.textContent = 'SYSTEM ONLINE';
+  }
+});
+
+// COPY TO CLIPBOARD AND TOAST SYSTEM
+function copyToClipboard(text, type) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast(`> ${type} COPIED TO CLIPBOARD`);
+  }).catch(err => {
+    showToast(`> ERR: FAILED TO COPY`);
+  });
+}
+
+function showToast(message) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.textContent = message;
+  container.appendChild(toast);
+  
+  // Trigger animation
+  setTimeout(() => toast.classList.add('show'), 10);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// CIRCUIT TRACE ANIMATION
 const cc = document.getElementById('circuit-canvas');
 const ctx = cc.getContext('2d');
 let W, H, traces = [];
 function resizeCC() { W = cc.width = window.innerWidth; H = cc.height = window.innerHeight; }
 resizeCC(); window.addEventListener('resize', resizeCC);
 
+function getColors() {
+  return [
+    getComputedStyle(document.documentElement).getPropertyValue('--green').trim(),
+    getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim()
+  ];
+}
+
+const DIRS = [[40,0],[0,40],[-40,0],[0,-40]];
+
 function newTrace() {
+  const COLS = getColors();
   return {
-    x: Math.round(Math.random()*(W/40))*40, y: Math.round(Math.random()*(H/40))*40,
-    color: Math.random() > 0.5 ? '#00ffb4' : '#00e5ff',
-    segs: [], dir: Math.floor(Math.random()*4), len: 6, opacity: 0, age: 0
+    x: Math.round(Math.random()*(W/40))*40,
+    y: Math.round(Math.random()*(H/40))*40,
+    color: COLS[Math.floor(Math.random()*2)],
+    segs: [], dir: Math.floor(Math.random()*4),
+    len: 4 + Math.floor(Math.random()*9),
+    opacity: 0, fade: false, age: 0,
+    maxAge: 180 + Math.random()*280
   };
 }
-for (let i = 0; i < 15; i++) traces.push(newTrace());
+for (let i = 0; i < 20; i++) traces.push(newTrace());
+
+function drawTrace(t) {
+  if (!t.segs.length) return;
+  ctx.save();
+  ctx.globalAlpha = t.opacity;
+  ctx.strokeStyle = t.color;
+  ctx.lineWidth = 1.5;
+  ctx.shadowColor = t.color; ctx.shadowBlur = 7;
+  ctx.beginPath();
+  ctx.moveTo(t.x, t.y);
+  t.segs.forEach(s => ctx.lineTo(s.x, s.y));
+  ctx.stroke();
+  const h = t.segs[t.segs.length-1];
+  ctx.beginPath(); ctx.arc(h.x, h.y, 2.5, 0, Math.PI*2);
+  ctx.fillStyle = t.color; ctx.fill();
+  ctx.restore();
+}
 
 function animCircuit() {
   ctx.clearRect(0,0,W,H);
   traces.forEach((t,i) => {
     t.age++;
-    t.opacity = Math.min(0.4, t.opacity + 0.01);
-    if (t.segs.length < t.len && t.age % 10 === 0) {
+    if (!t.fade) t.opacity = Math.min(0.65, t.opacity + 0.022);
+    if (t.segs.length < t.len && t.age % 5 === 0) {
       const last = t.segs.length ? t.segs[t.segs.length-1] : {x:t.x, y:t.y};
-      const d = [[40,0],[0,40],[-40,0],[0,-40]][t.dir];
-      t.segs.push({x: last.x + d[0], y: last.y + d[1]});
+      if (Math.random() < 0.3) t.dir = (t.dir + (Math.random()<0.5?1:3))%4;
+      const d = DIRS[t.dir];
+      const nx = last.x+d[0], ny = last.y+d[1];
+      if (nx>=0&&nx<=W&&ny>=0&&ny<=H) t.segs.push({x:nx,y:ny});
     }
-    if (t.age > 200) traces[i] = newTrace();
-    ctx.globalAlpha = t.opacity;
-    ctx.strokeStyle = t.color;
-    ctx.beginPath(); ctx.moveTo(t.x, t.y);
-    t.segs.forEach(s => ctx.lineTo(s.x, s.y));
-    ctx.stroke();
+    if (t.age > t.maxAge) { t.fade = true; t.opacity -= 0.018; }
+    if (t.opacity <= 0) traces[i] = newTrace(); // Gets new dynamic colors on respawn
+    drawTrace(t);
   });
   requestAnimationFrame(animCircuit);
 }
 animCircuit();
 
-// OSCILLOSCOPE
+// OSCILLOSCOPE WAVE (hero bottom)
 const osc = document.getElementById('osc-canvas');
 const octx = osc.getContext('2d');
 let ot = 0;
+function resizeOsc() { osc.width = window.innerWidth; osc.height = 120; }
+resizeOsc(); window.addEventListener('resize', resizeOsc);
+
 function drawOsc() {
-  octx.clearRect(0,0,osc.width,osc.height);
-  octx.beginPath();
-  for(let x=0; x<osc.width; x++) {
-    const y = Math.sin(x*0.02 + ot) * 20 + 60;
-    x === 0 ? octx.moveTo(x,y) : octx.lineTo(x,y);
-  }
-  octx.strokeStyle = '#00ffb4'; octx.stroke();
-  ot += 0.05; requestAnimationFrame(drawOsc);
+  const OW = osc.width, OH = osc.height;
+  octx.clearRect(0,0,OW,OH);
+  
+  // Get current CSS variables for dynamic wave colors
+  const green = getComputedStyle(document.documentElement).getPropertyValue('--green').trim();
+  const cyan = getComputedStyle(document.documentElement).getPropertyValue('--cyan').trim();
+  
+  // grid
+  octx.strokeStyle = `rgba(255,255,255,0.03)`; octx.lineWidth = 1;
+  for (let x=0; x<OW; x+=60) { octx.beginPath(); octx.moveTo(x,0); octx.lineTo(x,OH); octx.stroke(); }
+  octx.beginPath(); octx.moveTo(0,OH/2); octx.lineTo(OW,OH/2); octx.stroke();
+
+  const wave = (colorStr, alpha, amp, freq, phase, harmonics) => {
+    // Basic hex to rgba for the dynamic colors
+    let r=0,g=0,b=0;
+    if(colorStr.startsWith('#')) {
+      r = parseInt(colorStr.slice(1,3), 16) || 0;
+      g = parseInt(colorStr.slice(3,5), 16) || 255;
+      b = parseInt(colorStr.slice(5,7), 16) || 180;
+    }
+    const color = colorStr.startsWith('#') ? `rgba(${r},${g},${b},${alpha})` : colorStr;
+
+    octx.beginPath();
+    for (let x=0; x<OW; x++) {
+      let y = 0;
+      harmonics.forEach(([hf,ha]) => { y += ha * Math.sin(2*Math.PI*hf*freq*(x/OW)+phase+ot*hf); });
+      x===0 ? octx.moveTo(x, OH/2 - y*amp) : octx.lineTo(x, OH/2 - y*amp);
+    }
+    octx.strokeStyle = color; octx.lineWidth = 1.5;
+    octx.shadowColor = color; octx.shadowBlur = 8;
+    octx.stroke();
+  };
+
+  wave(green, 0.85, 28, 3, 0, [[1,1],[2,0.35],[3,0.12],[5,0.06]]);
+  wave(cyan, 0.4, 18, 5, Math.PI/3, [[1,1],[2,0.25],[4,0.08]]);
+  wave('rgba(255,107,43,0.2)', undefined, 10, 7, Math.PI*0.8, [[1,1],[3,0.2]]);
+
+  ot += 0.028;
+  requestAnimationFrame(drawOsc);
 }
 drawOsc();
 </script>
