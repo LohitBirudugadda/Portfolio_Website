@@ -29,24 +29,65 @@
       background: var(--bg);
       color: var(--text);
       overflow-x: hidden;
-      transition: filter 0.3s ease;
+      transition: filter 0.1s ease;
     }
 
-    /* Glitch State for Easter Egg */
-    body.glitch-mode {
-      filter: invert(1) hue-rotate(180deg);
-      animation: shake 0.2s infinite;
+    /* --- Hacker Mode Styles --- */
+    body.hacker-mode {
+      filter: invert(1) hue-rotate(180deg) contrast(1.2);
+    }
+    
+    /* Violent Glitch Animation */
+    body.glitch-active {
+      animation: glitch-anim 0.25s infinite;
+      user-select: none;
+      pointer-events: none;
     }
 
-    @keyframes shake {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      20% { transform: translate(-1px, -2px) rotate(-1deg); }
-      40% { transform: translate(-3px, 0px) rotate(1deg); }
-      60% { transform: translate(3px, 2px) rotate(0deg); }
-      80% { transform: translate(1px, -1px) rotate(1deg); }
-      100% { transform: translate(-1px, 2px) rotate(-1deg); }
+    @keyframes glitch-anim {
+      0% { transform: translate(0); clip-path: inset(0 0 0 0); }
+      20% { transform: translate(-5px, 5px); clip-path: inset(10% 0 30% 0); }
+      40% { transform: translate(5px, -5px); clip-path: inset(40% 0 10% 0); }
+      60% { transform: translate(-10px, 0px); filter: hue-rotate(90deg); }
+      80% { transform: translate(10px, 5px); clip-path: inset(20% 0 50% 0); }
+      100% { transform: translate(0); }
     }
 
+    /* Floating Alert */
+    #hacker-alert {
+      position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: var(--green); color: black;
+      padding: 1rem 2rem; font-family: 'Share Tech Mono', monospace;
+      font-weight: bold; z-index: 1000; display: none;
+      box-shadow: 0 0 50px var(--green);
+    }
+
+    /* Interactive Nav Button */
+    .nav-status {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; color: var(--green);
+      cursor: pointer; padding: 5px 10px;
+      border: 1px solid transparent; transition: all 0.2s;
+    }
+    .nav-status:hover {
+      border-color: var(--green); background: rgba(0,255,180,0.1);
+    }
+    .nav-status::after {
+      content: ' →'; opacity: 0; transform: translateX(-5px);
+      transition: all 0.2s;
+    }
+    .nav-status:hover::after { opacity: 1; transform: translateX(0); }
+
+    .nav-status::before {
+      content: ''; width: 7px; height: 7px;
+      border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: blink 1.4s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Background Elements */
     body::before {
       content: '';
       position: fixed; inset: 0; z-index: 0;
@@ -57,233 +98,61 @@
       pointer-events: none;
     }
 
-    #circuit-canvas {
-      position: fixed; inset: 0; z-index: 0;
-      opacity: 0.35;
-      pointer-events: none;
-    }
-
-    #osc-canvas {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 120px;
-      opacity: 0.7;
-    }
+    #circuit-canvas { position: fixed; inset: 0; z-index: 0; opacity: 0.35; pointer-events: none; }
+    #osc-canvas { position: absolute; bottom: 0; left: 0; right: 0; height: 120px; opacity: 0.7; }
 
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 3rem; height: 64px;
-      background: rgba(7,10,15,0.92);
-      backdrop-filter: blur(16px);
+      background: rgba(7,10,15,0.92); backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
     }
     .nav-logo {
-      font-family: 'Orbitron', monospace;
-      font-size: 15px; font-weight: 900;
-      color: var(--green);
-      letter-spacing: 0.12em;
-      text-decoration: none;
+      font-family: 'Orbitron', monospace; font-size: 15px; font-weight: 900;
+      color: var(--green); letter-spacing: 0.12em; text-decoration: none;
       text-shadow: 0 0 20px rgba(0,255,180,0.5);
     }
     .nav-links { display: flex; gap: 2.5rem; list-style: none; }
     .nav-links a {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 12px; color: var(--muted);
-      text-decoration: none; letter-spacing: 0.08em;
-      text-transform: uppercase; transition: color 0.2s;
+      font-family: 'Share Tech Mono', monospace; font-size: 12px; color: var(--muted);
+      text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--green); text-shadow: 0 0 8px var(--green); }
-    .nav-status {
-      display: flex; align-items: center; gap: 8px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; color: var(--green);
-    }
-    .nav-status::before {
-      content: ''; width: 7px; height: 7px;
-      border-radius: 50%; background: var(--green);
-      box-shadow: 0 0 8px var(--green);
-      animation: blink 1.4s ease-in-out infinite;
-    }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+    .nav-links a:hover { color: var(--green); }
 
-    .hero {
-      position: relative; min-height: 100vh;
-      display: flex; align-items: center;
-      padding: 80px 3rem 0;
-      overflow: hidden;
-    }
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; padding: 80px 3rem 0; overflow: hidden; }
     .hero-inner { position: relative; z-index: 2; max-width: 800px; }
-
     .chip-label {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 11px; letter-spacing: 0.15em;
-      color: var(--green); text-transform: uppercase;
-      margin-bottom: 1.5rem;
-      padding: 6px 14px;
-      border: 1px solid rgba(0,255,180,0.3);
-      border-radius: 2px;
-      background: rgba(0,255,180,0.05);
+      display: inline-flex; align-items: center; gap: 10px; font-family: 'Share Tech Mono', monospace;
+      font-size: 11px; letter-spacing: 0.15em; color: var(--green); text-transform: uppercase;
+      margin-bottom: 1.5rem; padding: 6px 14px; border: 1px solid rgba(0,255,180,0.3);
+      border-radius: 2px; background: rgba(0,255,180,0.05);
     }
-
-    .hero h1 {
-      font-family: 'Orbitron', monospace;
-      font-size: clamp(2.8rem, 7vw, 5.5rem);
-      font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: -0.01em;
-      margin-bottom: 1rem;
-    }
-    .hero h1 .line1 { color: var(--text); display: block; }
-    .hero h1 .line2 {
-      display: block;
-      background: linear-gradient(90deg, var(--green), var(--cyan));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 30px rgba(0,255,180,0.4));
-    }
-
-    .hero-role {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 14px; color: var(--cyan);
-      letter-spacing: 0.1em; margin-bottom: 1.5rem;
-    }
-    .hero-role span { color: var(--muted); cursor: pointer; transition: 0.2s; }
-    .hero-role span:hover { color: var(--cyan); text-shadow: 0 0 10px var(--cyan); }
-
-    .hero-desc {
-      font-size: 16px; color: var(--muted);
-      max-width: 520px; line-height: 1.8;
-      margin-bottom: 2.5rem;
-      font-weight: 300;
-    }
-
-    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
-    .btn {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 13px 28px; border-radius: 2px;
-      text-decoration: none; transition: all 0.2s;
-      cursor: pointer; border: none; display: inline-block;
-    }
-    .btn-primary {
-      background: var(--green); color: #070a0f;
-      font-weight: 700;
-      box-shadow: 0 0 30px rgba(0,255,180,0.3);
-    }
-    .btn-primary:hover { box-shadow: 0 0 50px rgba(0,255,180,0.6); transform: translateY(-2px); }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid rgba(0,229,255,0.4);
-      color: var(--cyan);
-    }
-    .btn-outline:hover { background: rgba(0,229,255,0.07); border-color: var(--cyan); transform: translateY(-2px); }
-
-    /* Interactive Cards */
-    .exp-card, .proj-card, .edu-card {
-      transition: transform 0.1s ease-out, border-color 0.3s;
-      transform-style: preserve-3d;
-      perspective: 1000px;
-    }
-
-    .signal-band {
-      position: relative; z-index: 2;
-      background: var(--card);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 3rem;
-      overflow: hidden;
-    }
-    .signal-ticker {
-      display: flex; gap: 4rem; align-items: center;
-      animation: ticker 35s linear infinite;
-      white-space: nowrap;
-    }
-    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+    .hero h1 { font-family: 'Orbitron', monospace; font-size: clamp(2.8rem, 7vw, 5.5rem); font-weight: 900; line-height: 0.95; margin-bottom: 1rem; }
+    .hero h1 .line2 { display: block; background: linear-gradient(90deg, var(--green), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(0,255,180,0.4)); }
+    .hero-role { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--cyan); margin-bottom: 1.5rem; }
+    .hero-desc { font-size: 16px; color: var(--muted); max-width: 520px; line-height: 1.8; margin-bottom: 2.5rem; }
     
-    .ticker-item:hover .val { color: white; text-shadow: 0 0 10px var(--green); }
+    .btn { font-family: 'Share Tech Mono', monospace; font-size: 12px; padding: 13px 28px; text-decoration: none; display: inline-block; }
+    .btn-primary { background: var(--green); color: #070a0f; font-weight: 700; box-shadow: 0 0 30px rgba(0,255,180,0.3); }
+    .btn-outline { border: 1px solid rgba(0,229,255,0.4); color: var(--cyan); }
+
+    .signal-band { background: var(--card); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1rem 3rem; overflow: hidden; position: relative; z-index: 2; }
+    .signal-ticker { display: flex; gap: 4rem; animation: ticker 35s linear infinite; white-space: nowrap; font-family: 'Share Tech Mono', monospace; font-size: 11px; }
+    @keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
     section { padding: 6rem 3rem; position: relative; z-index: 2; }
     .container { max-width: 1000px; margin: 0 auto; }
-
-    /* Easter Egg Button */
-    .easter-egg-btn {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      width: 50px;
-      height: 50px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--green);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 1000;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 0 15px rgba(0,255,180,0.1);
-    }
-    .easter-egg-btn:hover {
-      transform: scale(1.2) rotate(90deg);
-      border-color: var(--green);
-      box-shadow: 0 0 25px rgba(0,255,180,0.4);
-    }
-    .easter-egg-btn svg { width: 24px; height: 24px; }
-
-    /* Terminal Overlay */
-    #terminal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(7,10,15,0.95);
-      z-index: 2000;
-      display: none;
-      padding: 2rem;
-      font-family: 'Share Tech Mono', monospace;
-      color: var(--green);
-      overflow-y: auto;
-    }
-
-    .stat { cursor: crosshair; transition: 0.3s; }
-    .stat:hover { background: rgba(0,255,180,0.05); }
-
-    /* Reuse your existing styles for About, Skills, Experience, Projects, Contact, Footer here... */
-    /* (I am omitting the rest of the unchanged CSS for brevity but it stays the same as your previous file) */
-    #about { background: var(--bg2); }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-    .about-text p { font-size: 15px; color: var(--muted); line-height: 1.9; margin-bottom: 1rem; font-weight: 300; }
     .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); margin-bottom: 3rem; }
     .stat { background: var(--card); padding: 1.5rem; text-align: center; }
-    .stat .n { font-family: 'Orbitron', monospace; font-size: 2.2rem; font-weight: 900; color: var(--green); }
-    .stat .l { font-family: 'Share Tech Mono', monospace; font-size: 10px; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
-    .edu-card { border: 1px solid var(--border); background: var(--card); padding: 1.5rem; position: relative; }
-    .edu-card h3 { font-family: 'Orbitron', monospace; font-size: 14px; color: var(--text); }
-    .badge { font-family: 'Share Tech Mono', monospace; font-size: 11px; padding: 4px 10px; border: 1px solid rgba(0,255,180,0.3); background: rgba(0,255,180,0.07); color: var(--green); margin-right: 5px; }
-    .course-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .ctag { font-size: 11px; padding: 3px 8px; border: 1px solid rgba(90,122,112,0.3); color: var(--muted); }
-    .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-    .skill-block { border: 1px solid var(--border); background: var(--card); padding: 1.25rem 1.5rem; }
-    .skill-block h4 { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--cyan); margin-bottom: 1rem; }
-    .stags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .stag { font-size: 12px; padding: 4px 10px; border: 1px solid rgba(0,255,180,0.2); color: var(--text); cursor: pointer; }
-    .stag:hover { border-color: var(--green); color: var(--green); }
-    .exp-list { display: flex; flex-direction: column; gap: 20px; }
-    .exp-card { border: 1px solid var(--border); background: var(--card); padding: 1.75rem 2rem; position: relative; }
-    .exp-title { font-family: 'Orbitron', monospace; font-size: 13px; color: var(--text); }
-    .exp-org { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--cyan); }
-    .exp-bullets { list-style: none; margin-top: 1rem; }
-    .exp-bullets li { font-size: 13.5px; color: var(--muted); margin-bottom: 5px; padding-left: 15px; position: relative; }
-    .exp-bullets li::before { content: '▸'; position: absolute; left: 0; color: var(--green); }
-    .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .proj-card { border: 1px solid var(--border); background: var(--card); padding: 1.75rem; }
-    .proj-tag { font-family: 'Share Tech Mono', monospace; font-size: 10px; padding: 3px 8px; border: 1px solid rgba(255,107,43,0.25); color: var(--orange); margin-right: 4px; }
-    #contact { background: var(--bg2); }
-    .contact-box { border: 1px solid var(--border); background: var(--card); padding: 3rem; text-align: center; }
-    .clink { font-family: 'Share Tech Mono', monospace; font-size: 12px; padding: 11px 20px; border: 1px solid var(--border); color: var(--text); text-decoration: none; margin: 5px; display: inline-block; }
+    .stat .n { font-family: 'Orbitron', monospace; font-size: 2.2rem; color: var(--green); }
+    .skill-block { border: 1px solid var(--border); background: var(--card); padding: 1.5rem; margin-bottom: 1rem; }
+    .proj-card { border: 1px solid var(--border); background: var(--card); padding: 1.75rem; transition: 0.3s; }
+    .proj-card:hover { border-color: var(--green); transform: translateY(-5px); }
+    
     footer { padding: 1.5rem 3rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--muted); }
 
     @media (max-width: 700px) {
-      .about-grid, .skills-grid, .projects-grid { grid-template-columns: 1fr; }
       .stats-row { grid-template-columns: 1fr 1fr; }
       nav { padding: 0 1rem; }
       .nav-links { display: none; }
@@ -292,40 +161,30 @@
 </head>
 <body>
 
+<div id="hacker-alert">OVERRIDING CORE SYSTEM...</div>
 <canvas id="circuit-canvas"></canvas>
-
-<div class="easter-egg-btn" id="easter-egg-trigger" title="System Override">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-</div>
-
-<div id="terminal-overlay">
-  <div id="terminal-content"></div>
-</div>
 
 <nav>
   <a href="#" class="nav-logo">LB_SYS</a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
     <li><a href="#experience">Experience</a></li>
     <li><a href="#projects">Projects</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <div class="nav-status">SYSTEM ONLINE</div>
+  <div class="nav-status" id="system-trigger">SYSTEM ONLINE</div>
 </nav>
 
 <section class="hero">
   <canvas id="osc-canvas"></canvas>
   <div class="hero-inner">
-    <div class="chip-label">ECE · Oregon State University · Corvallis OR</div>
+    <div class="chip-label">ECE · Oregon State University</div>
     <h1>
       <span class="line1">LOHIT</span>
       <span class="line2">BIRUDUGADDA</span>
     </h1>
-    <p class="hero-role">// <span>Embedded Systems</span> · <span>Signal Processing</span> · <span>Hardware Research</span></p>
-    <p class="hero-desc">
-      ECE student building at the boundary of hardware and high-performance computation — from spintronic signal simulations to BLE-driven embedded systems.
-    </p>
+    <p class="hero-role">// Embedded Systems · Hardware Research</p>
+    <p class="hero-desc">ECE student building at the boundary of hardware and high-performance computation.</p>
     <div class="hero-btns">
       <a href="#contact" class="btn btn-primary">Initialize contact</a>
       <a href="#projects" class="btn btn-outline">View projects</a>
@@ -335,117 +194,29 @@
 
 <div class="signal-band">
   <div class="signal-ticker">
-    <span class="ticker-item"><span class="key">GPA</span>&nbsp;<span class="val">3.92</span></span>
-    <span class="ticker-sep">&nbsp;·&nbsp;</span>
-    <span class="ticker-item"><span class="key">Protocol</span>&nbsp;<span class="val">BLE / SPI / UART</span></span>
-    <span class="ticker-sep">&nbsp;·&nbsp;</span>
-    <span class="ticker-item"><span class="key">MCU</span>&nbsp;<span class="val">ESP32</span></span>
-    <span class="ticker-sep">&nbsp;·&nbsp;</span>
-    <span class="ticker-item"><span class="key">Sim</span>&nbsp;<span class="val">MuMax Plus · GPU</span></span>
-    <span class="ticker-sep">&nbsp;·&nbsp;</span>
-    <span class="ticker-item"><span class="key">Material</span>&nbsp;<span class="val">YIG · Graphene · TiO₂</span></span>
+    <span>GPA: 3.92</span> · <span>MCU: ESP32</span> · <span>PROTOCOL: BLE / SPI</span> · <span>LANG: C++ / SYSTEMVERILOG</span> · <span>RESEARCH: SPINTRONICS</span>
+    <span>GPA: 3.92</span> · <span>MCU: ESP32</span> · <span>PROTOCOL: BLE / SPI</span> · <span>LANG: C++ / SYSTEMVERILOG</span> · <span>RESEARCH: SPINTRONICS</span>
   </div>
 </div>
 
 <section id="about">
   <div class="container">
-    <div class="sec-header">
-      <div class="sec-num">// 01</div>
-      <h2 class="sec-title">About <span>Me</span></h2>
-    </div>
     <div class="stats-row">
-      <div class="stat"><div class="n">3.92</div><div class="l">GPA · Honors</div></div>
+      <div class="stat"><div class="n">3.92</div><div class="l">GPA</div></div>
       <div class="stat"><div class="n">3</div><div class="l">Research Roles</div></div>
       <div class="stat"><div class="n">150+</div><div class="l">Students Mentored</div></div>
-      <div class="stat"><div class="n">2028</div><div class="l">Expected Grad</div></div>
-    </div>
-    <div class="about-grid">
-      <div class="about-text">
-        <p>I'm a sophomore pursuing an <strong>Honors B.S. in Electrical and Computer Engineering</strong> at Oregon State University. My work spans the full stack from transistor-level analog design to GPU-accelerated micromagnetic simulation.</p>
-        <p>I hold three simultaneous research roles: simulating <strong>spin wave propagation in YIG films</strong>, synthesizing <strong>2D materials via laser ablation</strong>, and teaching data structures as an <strong>Undergraduate Learning Assistant</strong>.</p>
-      </div>
-      <div class="edu-card">
-        <h3>Oregon State University</h3>
-        <div class="badge">GPA: 3.92 / 4.00</div>
-        <div class="course-tags">
-          <span class="ctag">Electrical Fundamentals</span>
-          <span class="ctag">Data Structures</span>
-          <span class="ctag">Digital Logic Design</span>
-          <span class="ctag">Electronic Circuit Design</span>
-        </div>
-      </div>
+      <div class="stat"><div class="n">2028</div><div class="l">Graduation</div></div>
     </div>
   </div>
 </section>
 
-<section id="skills">
-    <div class="container">
-      <div class="sec-header">
-        <div class="sec-num">// 02</div>
-        <h2 class="sec-title">Tech <span>Stack</span></h2>
-      </div>
-      <div class="skills-grid">
-        <div class="skill-block">
-          <h4>Languages</h4>
-          <div class="stags">
-            <span class="stag">C</span><span class="stag">C++</span><span class="stag">Python</span>
-            <span class="stag">SystemVerilog</span>
-          </div>
-        </div>
-        <div class="skill-block">
-          <h4>Embedded &amp; Hardware</h4>
-          <div class="stags">
-            <span class="stag">ESP32</span><span class="stag">FPGA</span><span class="stag">KiCad</span><span class="stag">LTspice</span>
-          </div>
-        </div>
-      </div>
-    </div>
-</section>
-
-<section id="experience">
-    <div class="container">
-      <div class="sec-header"><div class="sec-num">// 03</div><h2 class="sec-title">Research &amp; <span>Experience</span></h2></div>
-      <div class="exp-list">
-        <div class="exp-card">
-          <div class="exp-title">Student Researcher — Spintronic Signal Processing</div>
-          <div class="exp-org">Dr. Albrecht Jander · Oregon State University</div>
-          <ul class="exp-bullets">
-            <li>Applying MuMax Plus for micromagnetic simulations of forward-volume spin waves in YIG films</li>
-            <li>Gaining experience with GPU-accelerated simulation pipelines.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-</section>
-
 <section id="projects">
-    <div class="container">
-      <div class="sec-header"><div class="sec-num">// 04</div><h2 class="sec-title">Build <span>Log</span></h2></div>
-      <div class="projects-grid">
-        <div class="proj-card">
-          <h3>Garage Trigger</h3>
-          <p>ESP32-based embedded system automating garage door triggering over Bluetooth Low Energy.</p>
-          <div class="proj-tags"><span class="proj-tag">ESP32</span><span class="proj-tag">C++</span><span class="proj-tag">BLE</span></div>
-        </div>
-        <div class="proj-card">
-            <h3>Adjustable DC Power Supply</h3>
-            <p>Full-wave bridge rectifier converting AC to regulated DC with a low-pass filter.</p>
-            <div class="proj-tags"><span class="proj-tag">LTSpice</span><span class="proj-tag">Circuit Design</span></div>
-          </div>
-      </div>
+  <div class="container">
+    <div class="proj-card">
+        <h3>Garage Trigger</h3>
+        <p>ESP32-based embedded system automating garage door triggering over Bluetooth Low Energy.</p>
     </div>
-</section>
-
-<section id="contact">
-    <div class="container">
-      <div class="contact-box">
-        <h2>Let's build something.</h2>
-        <div class="contact-links">
-          <a href="mailto:birudugl@oregonstate.edu" class="clink">Email</a>
-          <a href="https://linkedin.com/in/lohitbirudugadda" target="_blank" class="clink">LinkedIn</a>
-        </div>
-      </div>
-    </div>
+  </div>
 </section>
 
 <footer>
@@ -461,56 +232,65 @@ function tick() {
 }
 tick(); setInterval(tick, 1000);
 
-// CIRCUIT CANVAS WITH MOUSE INTERACTION
+// HACKER MODE LOGIC
+const trigger = document.getElementById('system-trigger');
+const alertBox = document.getElementById('hacker-alert');
+let isHacker = false;
+
+trigger.addEventListener('click', () => {
+  // Trigger Glitch
+  document.body.classList.add('glitch-active');
+  alertBox.style.display = 'block';
+  trigger.textContent = "ATTEMPTING OVERRIDE...";
+
+  setTimeout(() => {
+    document.body.classList.remove('glitch-active');
+    alertBox.style.display = 'none';
+    
+    // Toggle Hacker Mode
+    isHacker = !isHacker;
+    if(isHacker) {
+        document.body.classList.add('hacker-mode');
+        trigger.textContent = "HACKER MODE ACTIVE";
+        trigger.style.color = "#ff6b2b";
+    } else {
+        document.body.classList.remove('hacker-mode');
+        trigger.textContent = "SYSTEM ONLINE";
+        trigger.style.color = "#00ffb4";
+    }
+  }, 1200);
+});
+
+// CIRCUIT CANVAS
 const cc = document.getElementById('circuit-canvas');
 const ctx = cc.getContext('2d');
 let W, H, traces = [];
-let mouse = { x: -1000, y: -1000 };
-
 function resizeCC() { W = cc.width = window.innerWidth; H = cc.height = window.innerHeight; }
 resizeCC(); window.addEventListener('resize', resizeCC);
-window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
 
 function newTrace() {
   return {
-    x: Math.round(Math.random()*(W/40))*40,
-    y: Math.round(Math.random()*(H/40))*40,
+    x: Math.round(Math.random()*(W/40))*40, y: Math.round(Math.random()*(H/40))*40,
     color: Math.random() > 0.5 ? '#00ffb4' : '#00e5ff',
-    segs: [], dir: Math.floor(Math.random()*4),
-    len: 4 + Math.floor(Math.random()*9),
-    opacity: 0, fade: false, age: 0,
-    maxAge: 180 + Math.random()*280
+    segs: [], dir: Math.floor(Math.random()*4), len: 6, opacity: 0, age: 0
   };
 }
-for (let i = 0; i < 20; i++) traces.push(newTrace());
+for (let i = 0; i < 15; i++) traces.push(newTrace());
 
 function animCircuit() {
   ctx.clearRect(0,0,W,H);
   traces.forEach((t,i) => {
     t.age++;
-    if (!t.fade) t.opacity = Math.min(0.65, t.opacity + 0.02);
-    
-    if (t.segs.length < t.len && t.age % 5 === 0) {
+    t.opacity = Math.min(0.4, t.opacity + 0.01);
+    if (t.segs.length < t.len && t.age % 10 === 0) {
       const last = t.segs.length ? t.segs[t.segs.length-1] : {x:t.x, y:t.y};
-      
-      // Interaction: Avoid mouse
-      let dIndex = t.dir;
-      const dist = Math.hypot(last.x - mouse.x, last.y - mouse.y);
-      if (dist < 150) dIndex = (dIndex + 1) % 4; 
-
-      const DIRS = [[40,0],[0,40],[-40,0],[0,-40]];
-      const d = DIRS[dIndex];
+      const d = [[40,0],[0,40],[-40,0],[0,-40]][t.dir];
       t.segs.push({x: last.x + d[0], y: last.y + d[1]});
     }
-    
-    if (t.age > t.maxAge) { t.fade = true; t.opacity -= 0.02; }
-    if (t.opacity <= 0) traces[i] = newTrace();
-
-    // Draw
+    if (t.age > 200) traces[i] = newTrace();
     ctx.globalAlpha = t.opacity;
     ctx.strokeStyle = t.color;
-    ctx.beginPath();
-    ctx.moveTo(t.x, t.y);
+    ctx.beginPath(); ctx.moveTo(t.x, t.y);
     t.segs.forEach(s => ctx.lineTo(s.x, s.y));
     ctx.stroke();
   });
@@ -518,58 +298,7 @@ function animCircuit() {
 }
 animCircuit();
 
-// 3D PARALLAX EFFECT ON CARDS
-document.querySelectorAll('.exp-card, .proj-card, .edu-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    card.style.transform = `perspective(1000px) rotateY(${x * 10}deg) rotateX(${y * -10}deg) translateY(-5px)`;
-  });
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(0px)`;
-  });
-});
-
-// EASTER EGG LOGIC
-const trigger = document.getElementById('easter-egg-trigger');
-const terminal = document.getElementById('terminal-overlay');
-const termContent = document.getElementById('terminal-content');
-
-const messages = [
-  "> INITIALIZING SYSTEM OVERRIDE...",
-  "> BYPASSING OSU FIREWALL...",
-  "> ACCESSING SPINTRO-CORE SIMULATIONS...",
-  "> WARNING: MICROMAGNETIC TURBULENCE DETECTED",
-  "> LOHIT_BIRUDUGADDA.SYS LOADED SUCCESSFULLY.",
-  "> STATUS: ELITE DEVELOPER DETECTED.",
-  "> PRESS ESC TO RETURN TO SURFACE."
-];
-
-trigger.addEventListener('click', () => {
-  document.body.classList.add('glitch-mode');
-  terminal.style.display = 'block';
-  termContent.innerHTML = "";
-  
-  let i = 0;
-  const typeMsg = () => {
-    if (i < messages.length) {
-      termContent.innerHTML += `<p>${messages[i]}</p>`;
-      i++;
-      setTimeout(typeMsg, 600);
-    }
-  };
-  typeMsg();
-});
-
-window.addEventListener('keydown', (e) => {
-  if (e.key === "Escape") {
-    document.body.classList.remove('glitch-mode');
-    terminal.style.display = 'none';
-  }
-});
-
-// OSCILLOSCOPE WAVE (Simple Version)
+// OSCILLOSCOPE
 const osc = document.getElementById('osc-canvas');
 const octx = osc.getContext('2d');
 let ot = 0;
@@ -580,10 +309,8 @@ function drawOsc() {
     const y = Math.sin(x*0.02 + ot) * 20 + 60;
     x === 0 ? octx.moveTo(x,y) : octx.lineTo(x,y);
   }
-  octx.strokeStyle = '#00ffb4';
-  octx.stroke();
-  ot += 0.05;
-  requestAnimationFrame(drawOsc);
+  octx.strokeStyle = '#00ffb4'; octx.stroke();
+  ot += 0.05; requestAnimationFrame(drawOsc);
 }
 drawOsc();
 </script>
